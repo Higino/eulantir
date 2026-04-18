@@ -1,0 +1,57 @@
+version: "1"
+name: csv-filter-to-postgres
+
+meta:
+  description: "Read CSV, filter inactive rows, write to Postgres"
+  owner: data-team
+  tags: [etl, demo]
+
+execution:
+  max_concurrency: 4
+  batch_size: 1000
+
+connectors:
+  - name: csv-source
+    type: csv
+    config:
+      path: ./data/input.csv
+      delimiter: ","
+      has_header: true
+
+  - name: pg-sink
+    type: postgres
+    config:
+      dsn: $POSTGRES_DSN
+      table: public.active_users
+      upsert_key: [id]
+
+transforms:
+  - name: filter-active
+    source: generated/filter_active.go
+    entrypoint: FilterActive
+
+tasks:
+  - id: read
+    connector: csv-source
+    depends_on: []
+
+  - id: filter
+    transform: filter-active
+    depends_on: [read]
+
+  - id: write
+    connector: pg-sink
+    depends_on: [filter]
+
+retry:
+  max_attempts: 3
+  initial_interval: 1s
+  multiplier: 2.0
+  max_interval: 30s
+  jitter: true
+
+dlq:
+  enabled: true
+  type: file
+  config:
+    path: ./dlq

@@ -1,0 +1,31 @@
+version: "1"
+name: csv-filter-transform-test
+
+connectors:
+  - name: source
+    type: csv
+    config:
+      path: testdata/data/customers.csv
+
+  - name: sink
+    type: csv-sink
+    config:
+      path: /tmp/eulantir-transform-test-output.csv
+
+transforms:
+  - name: filter-active
+    source: ../transforms/filter_active.go
+    entrypoint: FilterActive
+
+tasks:
+  - id: read
+    connector: source
+    depends_on: []
+
+  - id: filter
+    transform: filter-active
+    depends_on: [read]
+
+  - id: write
+    connector: sink
+    depends_on: [filter]

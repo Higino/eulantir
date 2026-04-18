@@ -1,0 +1,31 @@
+# compiled binary
+eulantir
+
+# Go plugin shared libraries (compiled at runtime)
+*.so
+
+# test / temp output
+*.html
+/tmp/
+/dlq/
+/my-pipeline/
+
+# sample output (generated at runtime, not source)
+sample/data/active_customers.csv
+sample/data/*.so
+
+# Go build cache artefacts
+vendor/
+
+# Claude Code local overrides (permissions, personal settings)
+.claude/settings.local.json
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db

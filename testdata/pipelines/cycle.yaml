@@ -1,0 +1,26 @@
+version: "1"
+name: cyclic-pipeline
+
+connectors:
+  - name: src
+    type: csv
+    config:
+      path: ./data.csv
+  - name: sink
+    type: postgres
+    config:
+      dsn: postgres://localhost/test
+      table: public.out
+
+tasks:
+  - id: a
+    connector: src
+    depends_on: [c]
+
+  - id: b
+    connector: sink
+    depends_on: [a]
+
+  - id: c
+    connector: sink
+    depends_on: [b]

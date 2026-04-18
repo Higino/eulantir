@@ -1,0 +1,42 @@
+version: "1"
+name: active-customers
+
+meta:
+  description: "Read customer CSV, keep only active rows, write to a new CSV"
+  owner: demo
+  tags: [demo, csv, filter]
+
+connectors:
+  - name: source
+    type: csv
+    config:
+      path: ./sample/data/customers.csv
+
+  - name: sink
+    type: csv-sink
+    config:
+      path: ./sample/data/active_customers.csv
+
+transforms:
+  - name: filter-active
+    source: ./generated/filter_active.go
+    entrypoint: FilterActive
+
+tasks:
+  - id: read
+    connector: source
+
+  - id: filter
+    transform: filter-active
+    depends_on: [read]
+
+  - id: write
+    connector: sink
+    depends_on: [filter]
+
+retry:
+  max_attempts: 3
+  initial_interval: 500ms
+  multiplier: 2.0
+  max_interval: 10s
+  jitter: true

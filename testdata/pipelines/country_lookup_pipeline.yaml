@@ -1,0 +1,31 @@
+version: "1"
+name: country-lookup-test
+
+connectors:
+  - name: source
+    type: csv
+    config:
+      path: testdata/data/users_country_codes.csv
+
+  - name: sink
+    type: csv-sink
+    config:
+      path: /tmp/eulantir-country-lookup-output.csv
+
+transforms:
+  - name: country-lookup
+    source: ../transforms/country_lookup.go
+    entrypoint: CountryLookup
+
+tasks:
+  - id: read
+    connector: source
+    depends_on: []
+
+  - id: map-country
+    transform: country-lookup
+    depends_on: [read]
+
+  - id: write
+    connector: sink
+    depends_on: [map-country]

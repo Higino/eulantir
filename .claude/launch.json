@@ -1,0 +1,53 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "eulantir build",
+      "runtimeExecutable": "go",
+      "runtimeArgs": ["build", "-o", "eulantir", "."],
+      "port": null
+    },
+    {
+      "name": "eulantir test",
+      "runtimeExecutable": "go",
+      "runtimeArgs": ["test", "-v", "./..."],
+      "port": null
+    },
+    {
+      "name": "eulantir generate (ollama)",
+      "runtimeExecutable": "go",
+      "runtimeArgs": [
+        "run", ".", "generate",
+        "--provider", "ollama",
+        "--model", "llama3.2",
+        "--output", "./my-pipeline",
+        "read a CSV file, filter rows where status is not active, write to Postgres"
+      ],
+      "port": null
+    },
+    {
+      "name": "eulantir validate",
+      "runtimeExecutable": "go",
+      "runtimeArgs": ["run", ".", "validate", "testdata/pipelines/valid.yaml"],
+      "port": null
+    },
+    {
+      "name": "eulantir run",
+      "runtimeExecutable": "go",
+      "runtimeArgs": ["run", ".", "run", "testdata/pipelines/valid.yaml"],
+      "port": null
+    },
+    {
+      "name": "eulantir connectors list",
+      "runtimeExecutable": "go",
+      "runtimeArgs": ["run", ".", "connectors", "list"],
+      "port": null
+    },
+    {
+      "name": "viz-preview",
+      "runtimeExecutable": "go",
+      "runtimeArgs": ["run", ".", "serve", "sample/pipeline.yaml", "--port", "7891"],
+      "port": 7891
+    }
+  ]
+}

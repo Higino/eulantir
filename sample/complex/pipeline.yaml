@@ -1,0 +1,93 @@
+version: "1"
+name: customer-analytics
+
+meta:
+  description: "Two parallel chains: customer scoring and transaction categorization"
+  owner: demo
+  tags: [demo, complex, parallel]
+
+connectors:
+  - name: customers-src
+    type: csv
+    config:
+      path: ./sample/complex/data/customers.csv
+
+  - name: transactions-src
+    type: csv
+    config:
+      path: ./sample/complex/data/transactions.csv
+
+  - name: scored-sink
+    type: csv-sink
+    config:
+      path: ./sample/complex/data/scored_customers.csv
+
+  - name: report-sink
+    type: csv-sink
+    config:
+      path: ./sample/complex/data/transaction_report.csv
+
+transforms:
+  - name: normalize
+    source: ./generated/normalize.go
+    entrypoint: Normalize
+
+  - name: score
+    source: ./generated/score.go
+    entrypoint: Score
+
+  - name: validate
+    source: ./generated/validate.go
+    entrypoint: Validate
+
+  - name: enrich
+    source: ./generated/enrich.go
+    entrypoint: Enrich
+
+  - name: categorize
+    source: ./generated/categorize.go
+    entrypoint: Categorize
+
+tasks:
+  # ── Chain 1: Customer Scoring (120 records × 20ms × 2 transforms ≈ 5s) ──
+  - id: read-customers
+    connector: customers-src
+
+  - id: normalize-names
+    transform: normalize
+    depends_on: [read-customers]
+
+  - id: score-customers
+    transform: score
+    depends_on: [normalize-names]
+
+  - id: write-scored
+    connector: scored-sink
+    depends_on: [score-customers]
+
+  # ── Chain 2: Transaction Processing (150 records × 20ms × 3 transforms ≈ 9s) ──
+  - id: read-transactions
+    connector: transactions-src
+
+  - id: validate-amounts
+    transform: validate
+    depends_on: [read-transactions]
+
+  - id: enrich-transactions
+    transform: enrich
+    depends_on: [validate-amounts]
+
+  - id: categorize-transactions
+    transform: categorize
+    depends_on: [enrich-transactions]
+
+  - id: write-report
+    connector: report-sink
+    depends_on: [categorize-transactions]
+
+retry:
+  max_attempts: 2
+  initial_interval: 500ms
+  multiplier: 2.0
+  max_interval: 5s
+  jitter: true

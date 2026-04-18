@@ -119,15 +119,19 @@ const htmlTmpl = `<!DOCTYPE html>
     };
     es.onmessage = e => {
       const r = JSON.parse(e.data);
+      if (r.status === "done") {
+        es.close();
+        badge.textContent = "finished";
+        badge.style.color = "#a6e3a1";
+        badge.style.background = "#1e3a2a";
+        return;
+      }
       const c = COLOR[r.status] || COLOR.pending;
       nodeDS.update({
         id: r.nodeID,
         color: { background: c.bg, border: c.border, highlight: { background: c.bg, border: c.border } },
         font: { color: c.font, face: "monospace", size: 13 },
       });
-      // Close SSE when all tasks have reached a terminal state.
-      const allDone = nodeDS.get().every(n => ["success","failed","skipped"].includes(n.color.border === COLOR.success.border ? "success" : n.color.border === COLOR.failed.border ? "failed" : "pending"));
-      if (r.status === "done") { es.close(); badge.textContent = "finished"; }
     };
     {{end}}
   </script>

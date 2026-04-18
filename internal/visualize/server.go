@@ -100,6 +100,16 @@ func (s *Server) handleSSE(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("X-Accel-Buffering", "no") // disable nginx buffering if present
 
 	ch := make(chan string, 32)
+
+	// Replay current node states so late-connecting browsers catch up immediately.
+	s.mu.RLock()
+	for _, n := range s.graph.Nodes {
+		if payload, err := json.Marshal(statusEvent{NodeID: n.ID, Status: n.Status}); err == nil {
+			ch <- string(payload)
+		}
+	}
+	s.mu.RUnlock()
+
 	s.clientsMu.Lock()
 	s.clients[ch] = struct{}{}
 	s.clientsMu.Unlock()

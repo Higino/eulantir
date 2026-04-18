@@ -115,13 +115,17 @@ pipeline.yaml
   → visualize.NewServer(graph)          creates SSE broadcast server
   → http.Server{Handler: srv}.ListenAndServe(:8080)
       GET /         → RenderHTML(graph, liveMode=true)  (SSE client JS injected)
-      GET /events   → text/event-stream; one JSON frame per TaskResult
+      GET /events   → text/event-stream
+                        on connect: immediately replays current state of all nodes
+                        (late-connecting browsers catch up even if pipeline is mid-run)
+                        then streams one JSON frame per TaskResult as tasks complete
   → (optional --run flag)
       → engine.LocalEngine.Run(ctx, cfg)  executes pipeline in background goroutine
       → for each TaskResult: srv.Push(result)
           → graph.ApplyResult()           updates in-memory node status
           → broadcasts {"nodeID":"…","status":"…"} to all SSE clients
-      → srv.Done()                        sends sentinel frame; browser closes stream
+      → srv.Done()                        sends {"status":"done"} sentinel;
+                                          browser closes EventSource + sets badge to "finished"
   → blocks until SIGINT / SIGTERM → httpSrv.Shutdown()
 ```
 
@@ -479,10 +483,20 @@ Error: config error: validation errors:
 ▶  Dashboard at http://localhost:8080  (pipeline executing)
    Press Ctrl+C to stop
 ```
-Browser shows an interactive left-to-right DAG. With `--run`, nodes update live:
-- gray → pending
-- green → success
-- red → failed
+Browser shows an interactive left-to-right DAG (vis-network, hierarchical LR layout).
+With `--run`, nodes update live as each task finishes:
+- gray → pending, green → success, red → failed, orange → skipped
+- Badge transitions: `connecting…` → `live` → `finished`
+- Late-connecting browsers receive a full state replay on `/events` connect
+
+## Sample pipelines
+
+| Path | Tasks | Description |
+|---|---|---|
+| `sample/pipeline.yaml` | 3 | Read CSV → filter active → write CSV (simple, ~7s) |
+| `sample/complex/pipeline.yaml` | 9 | Two parallel chains: customer scoring + transaction categorization (~26s) |
+
+The complex pipeline is useful for watching the live dashboard — two independent chains execute concurrently so you can see nodes completing at different rates.
 
 ## Test coverage
 
@@ -532,6 +546,9 @@ The tests create two buckets (`eulantir-test`, `eulantir-pipeline-test`), upload
 - **Lineage is orthogonal** — `NoopEmitter` is used when lineage is disabled; the engine, executor, and connectors have no knowledge of lineage. `LocalEngine.Lineage` field is optional; nil → noop.
 - **OpenLineage over plain HTTP** — no SDK dependency. Eulantir posts JSON to `/api/v1/lineage` using only `net/http`. Any OpenLineage-compatible backend (Marquez, DataHub, Atlan) works with a one-line config change.
 - **Lineage errors are non-fatal** — `EmitStart`/`EmitComplete`/`EmitFail` failures log a warning and do not interrupt pipeline execution.
+- **SSE state replay on connect** — `Server.handleSSE` pre-fills the new client's channel with the current status of every node before registering it for live broadcasts. This eliminates a race condition where the pipeline finishes before the browser opens `/events`.
+- **Transform source paths are YAML-relative** — `config.Load()` resolves `transforms[].source` relative to the YAML file's directory, not the working directory. Always use paths like `./generated/normalize.go`, not `./sample/generated/normalize.go`.
+- **`{"status":"done"}` SSE sentinel** — `srv.Done()` broadcasts a special frame after all tasks finish. The browser closes the EventSource and updates the badge to "finished" on receipt.
 
 ## Build phases
 

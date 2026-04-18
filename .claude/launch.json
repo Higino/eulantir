@@ -45,8 +45,8 @@
     },
     {
       "name": "viz-preview",
-      "runtimeExecutable": "go",
-      "runtimeArgs": ["run", ".", "serve", "sample/pipeline.yaml", "--port", "7891"],
+      "runtimeExecutable": "./eulantir",
+      "runtimeArgs": ["serve", "sample/complex/pipeline.yaml", "--port", "7891", "--run"],
       "port": 7891
     }
   ]

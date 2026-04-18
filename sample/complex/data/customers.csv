@@ -1,0 +1,121 @@
+id,name,email,status,balance,country
+1,Bob,bob1@gmail.com,active,2750.02,DE
+2,Carol,carol2@yahoo.com,premium,6766.32,UK
+3,Dave,dave3@icloud.com,active,297.94,DE
+4,Eve,eve4@yahoo.com,inactive,265.33,DE
+5,Frank,frank5@icloud.com,active,4491.64,FR
+6,Grace,grace6@gmail.com,premium,1596.43,BR
+7,Hank,hank7@outlook.com,active,2152.92,AU
+8,Iris,iris8@gmail.com,active,967.07,AU
+9,Jack,jack9@icloud.com,active,434.46,JP
+10,Kate,kate10@icloud.com,active,9222.03,UK
+11,Leo,leo11@icloud.com,active,6285.77,AU
+12,Mia,mia12@icloud.com,active,695.48,DE
+13,Nora,nora13@outlook.com,trial,8552.32,UK
+14,Oscar,oscar14@proton.me,active,6356.21,AU
+15,Pam,pam15@yahoo.com,active,2094.86,FR
+16,Quinn,quinn16@gmail.com,inactive,1711.22,DE
+17,Ray,ray17@yahoo.com,inactive,2699.21,DE
+18,Sara,sara18@outlook.com,premium,7759.22,DE
+19,Tom,tom19@gmail.com,premium,4011.25,UK
+20,Uma,uma20@yahoo.com,trial,5671.23,AU
+21,Vic,vic21@yahoo.com,premium,3955.92,JP
+22,Wendy,wendy22@yahoo.com,active,2466.03,FR
+23,Xander,xander23@icloud.com,active,5834.75,AU
+24,Yara,yara24@yahoo.com,trial,1383.18,JP
+25,Zoe,zoe25@gmail.com,premium,8610.17,CA
+26,Aaron,aaron26@yahoo.com,premium,4221.18,UK
+27,Beth,beth27@proton.me,active,9960.22,FR
+28,Carl,carl28@icloud.com,premium,114.8,UK
+29,Diana,diana29@icloud.com,premium,7685.22,AU
+30,Alice 2,alice30@gmail.com,active,1581.42,US
+31,Bob 2,bob31@outlook.com,trial,7618.86,UK
+32,Carol 2,carol32@outlook.com,premium,5076.12,DE
+33,Dave 2,dave33@yahoo.com,active,1615.33,US
+34,Eve 2,eve34@icloud.com,active,194.75,AU
+35,Frank 2,frank35@outlook.com,active,2408.48,UK
+36,Grace 2,grace36@gmail.com,premium,8159.42,CA
+37,Hank 2,hank37@yahoo.com,premium,9467.54,CA
+38,Iris 2,iris38@outlook.com,inactive,6065.33,DE
+39,Jack 2,jack39@icloud.com,premium,6897.99,FR
+40,Kate 2,kate40@proton.me,trial,6498.13,JP
+41,Leo 2,leo41@icloud.com,inactive,2478.81,UK
+42,Mia 2,mia42@outlook.com,active,5538.66,DE
+43,Nora 2,nora43@gmail.com,active,6310.4,DE
+44,Oscar 2,oscar44@gmail.com,trial,8595.49,UK
+45,Pam 2,pam45@icloud.com,active,6689.11,DE
+46,Quinn 2,quinn46@icloud.com,active,9354.21,JP
+47,Ray 2,ray47@yahoo.com,premium,8074.16,DE
+48,Sara 2,sara48@gmail.com,active,4310.08,BR
+49,Tom 2,tom49@proton.me,inactive,7290.03,UK
+50,Uma 2,uma50@gmail.com,active,3392.69,UK
+51,Vic 2,vic51@yahoo.com,active,5362.32,CA
+52,Wendy 2,wendy52@proton.me,active,4625.82,UK
+53,Xander 2,xander53@proton.me,premium,8558.81,UK
+54,Yara 2,yara54@gmail.com,premium,5405.34,US
+55,Zoe 2,zoe55@gmail.com,trial,8486.11,CA
+56,Aaron 2,aaron56@proton.me,inactive,2137.26,BR
+57,Beth 2,beth57@gmail.com,active,21.55,BR
+58,Carl 2,carl58@outlook.com,trial,7850.51,FR
+59,Diana 2,diana59@proton.me,premium,7304.32,JP
+60,Alice 3,alice60@yahoo.com,active,2176.79,US
+61,Bob 3,bob61@icloud.com,premium,609.51,AU
+62,Carol 3,carol62@gmail.com,active,4767.41,CA
+63,Dave 3,dave63@gmail.com,trial,801.03,CA
+64,Eve 3,eve64@gmail.com,inactive,6751.45,DE
+65,Frank 3,frank65@proton.me,active,8901.98,DE
+66,Grace 3,grace66@icloud.com,inactive,6193.2,BR
+67,Hank 3,hank67@icloud.com,inactive,3163.38,FR
+68,Iris 3,iris68@yahoo.com,premium,3141.52,FR
+69,Jack 3,jack69@proton.me,active,6454.36,JP
+70,Kate 3,kate70@outlook.com,trial,9356.41,US
+71,Leo 3,leo71@proton.me,inactive,5629.37,UK
+72,Mia 3,mia72@gmail.com,inactive,5058.34,CA
+73,Nora 3,nora73@outlook.com,premium,8791.82,AU
+74,Oscar 3,oscar74@outlook.com,active,8336.62,FR
+75,Pam 3,pam75@icloud.com,trial,8070.19,US
+76,Quinn 3,quinn76@icloud.com,active,6633.22,CA
+77,Ray 3,ray77@outlook.com,active,1070.25,CA
+78,Sara 3,sara78@outlook.com,active,2106.09,AU
+79,Tom 3,tom79@yahoo.com,premium,8528.28,JP
+80,Uma 3,uma80@outlook.com,trial,8460.19,UK
+81,Vic 3,vic81@proton.me,premium,440.82,AU
+82,Wendy 3,wendy82@yahoo.com,inactive,2619.29,JP
+83,Xander 3,xander83@icloud.com,premium,5608.51,UK
+84,Yara 3,yara84@gmail.com,trial,6909.51,CA
+85,Zoe 3,zoe85@icloud.com,active,3691.79,CA
+86,Aaron 3,aaron86@proton.me,active,3082.28,US
+87,Beth 3,beth87@outlook.com,active,2495.05,UK
+88,Carl 3,carl88@outlook.com,premium,8840.46,BR
+89,Diana 3,diana89@icloud.com,premium,9256.71,DE
+90,Alice 4,alice90@yahoo.com,trial,8106.91,BR
+91,Bob 4,bob91@gmail.com,active,9243.95,BR
+92,Carol 4,carol92@yahoo.com,active,7872.96,UK
+93,Dave 4,dave93@proton.me,premium,8585.07,DE
+94,Eve 4,eve94@yahoo.com,premium,4602.57,FR
+95,Frank 4,frank95@yahoo.com,active,6599.67,BR
+96,Grace 4,grace96@outlook.com,active,694.14,FR
+97,Hank 4,hank97@outlook.com,inactive,3996.38,AU
+98,Iris 4,iris98@gmail.com,active,9703.04,CA
+99,Jack 4,jack99@icloud.com,trial,2654.4,UK
+100,Kate 4,kate100@icloud.com,active,7284.72,AU
+101,Leo 4,leo101@proton.me,inactive,5113.72,BR
+102,Mia 4,mia102@icloud.com,active,443.82,BR
+103,Nora 4,nora103@gmail.com,inactive,8064.3,DE
+104,Oscar 4,oscar104@outlook.com,active,9487.8,AU
+105,Pam 4,pam105@icloud.com,active,8479.3,FR
+106,Quinn 4,quinn106@icloud.com,active,4083.52,BR
+107,Ray 4,ray107@outlook.com,inactive,1918.21,BR
+108,Sara 4,sara108@yahoo.com,inactive,3009.2,US
+109,Tom 4,tom109@outlook.com,active,4298.45,AU
+110,Uma 4,uma110@proton.me,active,6755.6,JP
+111,Vic 4,vic111@yahoo.com,premium,2837.58,AU
+112,Wendy 4,wendy112@gmail.com,premium,7510.63,FR
+113,Xander 4,xander113@yahoo.com,premium,1473.39,US
+114,Yara 4,yara114@yahoo.com,trial,6112.13,UK
+115,Zoe 4,zoe115@proton.me,active,6297.02,DE
+116,Aaron 4,aaron116@proton.me,inactive,2439.6,US
+117,Beth 4,beth117@gmail.com,premium,2188.19,JP
+118,Carl 4,carl118@gmail.com,inactive,9173.78,UK
+119,Diana 4,diana119@proton.me,active,4645.97,AU
+120,Alice 5,alice120@proton.me,inactive,7192.02,BR

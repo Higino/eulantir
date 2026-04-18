@@ -1,0 +1,151 @@
+id,customer_id,amount,type,description,date
+1,107,4487.7,deposit,subscription,2026-04-15
+2,34,3634.77,transfer,tip,2026-02-09
+3,57,-73.84,transfer,wire transfer,2026-03-11
+4,41,4411.65,purchase,subscription,2026-02-08
+5,50,3316.72,refund,in-store,2026-04-14
+6,43,2484.36,deposit,online order,2026-02-27
+7,54,1642.12,withdrawal,online order,2026-04-16
+8,1,4685.08,transfer,invoice,2026-04-18
+9,96,3540.49,withdrawal,wire transfer,2026-04-08
+10,35,1897.1,purchase,invoice,2026-03-22
+11,87,3889.78,refund,tip,2026-02-20
+12,69,-351.68,deposit,online order,2026-01-21
+13,55,246.35,deposit,subscription,2026-01-09
+14,49,1300.44,deposit,payroll,2026-03-25
+15,113,1585.19,deposit,ATM,2026-01-16
+16,3,3619.63,purchase,payroll,2026-02-21
+17,9,3796.78,purchase,online order,2026-02-07
+18,108,-387.91,refund,wire transfer,2026-02-16
+19,86,129.14,refund,tip,2026-03-25
+20,48,422.84,withdrawal,in-store,2026-02-10
+21,14,2682.77,transfer,invoice,2026-04-23
+22,26,-82.02,refund,in-store,2026-03-28
+23,88,2802.26,purchase,online order,2026-03-18
+24,55,3138.37,purchase,payroll,2026-01-28
+25,54,4022.82,purchase,invoice,2026-03-21
+26,115,4057.89,refund,invoice,2026-02-24
+27,67,4810.11,transfer,tip,2026-04-14
+28,106,3520.64,transfer,payroll,2026-02-27
+29,120,-23.35,deposit,wire transfer,2026-04-19
+30,79,3175.04,transfer,online order,2026-04-28
+31,42,500.12,refund,payroll,2026-03-11
+32,36,4341.76,transfer,online order,2026-02-03
+33,31,3460.41,deposit,wire transfer,2026-04-21
+34,92,2199.52,purchase,in-store,2026-03-08
+35,52,3304.83,transfer,payroll,2026-04-18
+36,68,1390.67,withdrawal,payroll,2026-03-23
+37,59,990.04,transfer,wire transfer,2026-01-24
+38,25,1235.51,withdrawal,subscription,2026-02-07
+39,95,2163.09,withdrawal,ATM,2026-01-27
+40,25,1129.36,transfer,subscription,2026-03-01
+41,91,2437.74,transfer,online order,2026-01-18
+42,38,3335.8,refund,tip,2026-01-28
+43,2,2657.35,deposit,tip,2026-04-11
+44,24,4810.24,transfer,tip,2026-01-27
+45,9,1703.89,purchase,online order,2026-02-05
+46,104,2595.62,transfer,in-store,2026-02-04
+47,72,3704.44,withdrawal,wire transfer,2026-04-15
+48,117,1934.97,withdrawal,invoice,2026-03-19
+49,80,-168.73,purchase,wire transfer,2026-02-09
+50,85,-53.47,refund,subscription,2026-01-06
+51,1,1746.85,withdrawal,tip,2026-03-02
+52,30,1084.58,transfer,tip,2026-01-22
+53,30,4581.51,withdrawal,wire transfer,2026-04-04
+54,70,736.45,refund,ATM,2026-02-03
+55,8,412.58,transfer,ATM,2026-04-04
+56,60,3287.73,deposit,ATM,2026-04-15
+57,11,2789.2,deposit,payroll,2026-03-01
+58,12,759.08,withdrawal,online order,2026-03-19
+59,6,3697.1,refund,tip,2026-04-09
+60,24,4983.2,deposit,tip,2026-01-16
+61,45,1745.91,transfer,in-store,2026-02-11
+62,53,3315.21,transfer,invoice,2026-01-15
+63,12,1229.84,transfer,in-store,2026-04-28
+64,66,4037.1,purchase,tip,2026-04-02
+65,25,2351.42,withdrawal,tip,2026-04-25
+66,7,619.57,withdrawal,subscription,2026-03-15
+67,113,3340.38,purchase,online order,2026-02-23
+68,21,1209.13,purchase,invoice,2026-01-08
+69,108,4521.11,deposit,in-store,2026-02-16
+70,120,3441.32,withdrawal,ATM,2026-04-27
+71,62,4891.35,refund,tip,2026-02-13
+72,25,4570.27,withdrawal,subscription,2026-01-09
+73,99,3845.03,deposit,payroll,2026-03-27
+74,1,1055.61,transfer,tip,2026-02-15
+75,69,2163.88,transfer,invoice,2026-04-11
+76,112,537.59,refund,invoice,2026-02-28
+77,100,1759.26,transfer,tip,2026-04-13
+78,85,3858.17,refund,tip,2026-01-05
+79,65,4809.44,transfer,in-store,2026-04-04
+80,68,4507.43,purchase,subscription,2026-04-28
+81,84,4834.76,purchase,tip,2026-03-11
+82,80,3309.88,purchase,payroll,2026-04-11
+83,81,3452.95,deposit,online order,2026-01-08
+84,81,3264.2,transfer,wire transfer,2026-01-14
+85,13,3682.03,purchase,tip,2026-02-23
+86,39,4468.83,purchase,payroll,2026-01-10
+87,46,1561.63,refund,wire transfer,2026-04-19
+88,88,3858.86,refund,subscription,2026-01-20
+89,112,1603.99,refund,tip,2026-02-08
+90,60,3008.48,deposit,ATM,2026-01-26
+91,60,4456.65,withdrawal,subscription,2026-01-15
+92,45,4932.08,transfer,invoice,2026-03-15
+93,109,1161.67,deposit,tip,2026-01-08
+94,49,2645.57,withdrawal,ATM,2026-03-01
+95,107,3120.26,transfer,online order,2026-01-20
+96,96,2232.0,transfer,wire transfer,2026-03-08
+97,82,545.73,transfer,subscription,2026-01-21
+98,83,-283.18,deposit,online order,2026-03-24
+99,17,-4.27,transfer,payroll,2026-04-06
+100,26,226.88,withdrawal,payroll,2026-03-27
+101,22,913.34,deposit,ATM,2026-03-26
+102,15,2075.82,purchase,subscription,2026-02-28
+103,87,3483.19,deposit,payroll,2026-01-26
+104,51,-423.45,withdrawal,in-store,2026-04-12
+105,87,3619.56,transfer,invoice,2026-03-04
+106,87,786.02,purchase,payroll,2026-02-21
+107,9,2994.72,deposit,ATM,2026-04-04
+108,18,-250.59,purchase,ATM,2026-04-04
+109,13,791.4,withdrawal,subscription,2026-04-15
+110,48,3187.67,withdrawal,invoice,2026-02-14
+111,84,44.62,deposit,invoice,2026-03-02
+112,89,1537.91,deposit,tip,2026-02-28
+113,47,46.45,transfer,payroll,2026-01-13
+114,36,543.95,purchase,tip,2026-01-22
+115,28,3029.37,withdrawal,online order,2026-01-26
+116,43,839.63,refund,wire transfer,2026-01-27
+117,98,2548.14,withdrawal,wire transfer,2026-02-11
+118,100,311.55,withdrawal,online order,2026-03-28
+119,19,4931.4,withdrawal,ATM,2026-02-04
+120,85,4265.46,refund,online order,2026-03-26
+121,101,808.62,transfer,online order,2026-02-09
+122,7,197.17,deposit,in-store,2026-01-16
+123,58,3779.09,withdrawal,in-store,2026-04-17
+124,29,4699.79,purchase,ATM,2026-04-21
+125,4,-165.46,deposit,invoice,2026-04-22
+126,14,2196.48,deposit,in-store,2026-01-11
+127,78,315.84,refund,ATM,2026-03-13
+128,77,2418.06,deposit,invoice,2026-01-26
+129,90,129.28,withdrawal,wire transfer,2026-04-15
+130,114,756.71,transfer,tip,2026-04-14
+131,94,22.97,deposit,payroll,2026-03-12
+132,20,3277.52,deposit,in-store,2026-01-27
+133,11,12.77,purchase,payroll,2026-02-18
+134,8,2725.56,withdrawal,payroll,2026-01-14
+135,46,4304.84,deposit,online order,2026-03-20
+136,40,1434.05,withdrawal,wire transfer,2026-02-22
+137,62,733.35,purchase,payroll,2026-03-04
+138,98,1032.13,refund,invoice,2026-01-20
+139,119,3118.07,transfer,online order,2026-02-09
+140,90,3693.25,transfer,payroll,2026-01-06
+141,112,287.88,deposit,in-store,2026-02-24
+142,82,4844.96,purchase,wire transfer,2026-04-14
+143,59,1374.93,transfer,ATM,2026-03-25
+144,73,2779.23,purchase,subscription,2026-02-25
+145,80,-226.31,purchase,ATM,2026-04-22
+146,55,2171.14,deposit,invoice,2026-03-07
+147,97,2317.9,transfer,invoice,2026-01-10
+148,87,3231.67,deposit,ATM,2026-01-08
+149,51,4914.45,purchase,online order,2026-02-10
+150,28,3720.42,transfer,ATM,2026-03-04

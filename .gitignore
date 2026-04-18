@@ -13,6 +13,9 @@ eulantir
 # sample output (generated at runtime, not source)
 sample/data/active_customers.csv
 sample/data/*.so
+sample/complex/data/scored_customers.csv
+sample/complex/data/transaction_report.csv
+sample/complex/data/*.so
 
 # Go build cache artefacts
 vendor/

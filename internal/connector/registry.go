@@ -73,15 +73,17 @@ func (r *Registry) BuildSink(typ string, cfg map[string]any) (Sink, error) {
 	return sink, nil
 }
 
+// IsSink reports whether the given connector type is registered as a sink.
+func (r *Registry) IsSink(typ string) bool {
+	_, ok := r.sinks[typ]
+	return ok
+}
+
 // List returns all registered connector types sorted alphabetically.
 func (r *Registry) List() []ConnectorInfo {
-	seen := make(map[string]struct{})
-	var list []ConnectorInfo
-	for typ, info := range r.info {
-		if _, ok := seen[typ]; !ok {
-			list = append(list, info)
-			seen[typ] = struct{}{}
-		}
+	list := make([]ConnectorInfo, 0, len(r.info))
+	for _, info := range r.info {
+		list = append(list, info)
 	}
 	sort.Slice(list, func(i, j int) bool { return list[i].Type < list[j].Type })
 	return list

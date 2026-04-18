@@ -18,10 +18,9 @@ type statusEvent struct {
 // Server serves the pipeline visualization dashboard and streams live task
 // status updates to connected browsers over Server-Sent Events.
 type Server struct {
-	mu        sync.RWMutex
-	graph     GraphData
-	clientsMu sync.Mutex
-	clients   map[chan string]struct{}
+	mu      sync.Mutex
+	graph   GraphData
+	clients map[chan string]struct{}
 }
 
 // NewServer creates a Server backed by the given graph.
@@ -33,34 +32,31 @@ func NewServer(graph GraphData) *Server {
 }
 
 // Push updates the in-memory graph and broadcasts a status event to all
-// connected SSE clients. Safe to call from multiple goroutines.
+// connected SSE clients atomically. Safe to call from multiple goroutines.
 func (s *Server) Push(result engine.TaskResult) {
-	s.mu.Lock()
-	s.graph.ApplyResult(result)
-	s.mu.Unlock()
-
 	payload, _ := json.Marshal(statusEvent{NodeID: result.NodeID, Status: result.Status})
 
-	s.clientsMu.Lock()
+	s.mu.Lock()
+	s.graph.ApplyResult(result)
 	for ch := range s.clients {
 		select {
 		case ch <- string(payload):
 		default: // drop if the client is too slow
 		}
 	}
-	s.clientsMu.Unlock()
+	s.mu.Unlock()
 }
 
 // Done sends a sentinel "done" event so the browser can close the SSE stream.
 func (s *Server) Done() {
-	s.clientsMu.Lock()
+	s.mu.Lock()
 	for ch := range s.clients {
 		select {
 		case ch <- `{"status":"done"}`:
 		default:
 		}
 	}
-	s.clientsMu.Unlock()
+	s.mu.Unlock()
 }
 
 // ServeHTTP implements http.Handler. Routes: / → dashboard, /events → SSE.
@@ -74,9 +70,9 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) handleIndex(w http.ResponseWriter, r *http.Request) {
-	s.mu.RLock()
+	s.mu.Lock()
 	g := s.graph
-	s.mu.RUnlock()
+	s.mu.Unlock()
 
 	html, err := RenderHTML(g, true)
 	if err != nil {
@@ -101,23 +97,21 @@ func (s *Server) handleSSE(w http.ResponseWriter, r *http.Request) {
 
 	ch := make(chan string, 32)
 
-	// Replay current node states so late-connecting browsers catch up immediately.
-	s.mu.RLock()
+	// Replay current node states and register the client atomically so no
+	// Push() event can slip between replay and registration.
+	s.mu.Lock()
 	for _, n := range s.graph.Nodes {
 		if payload, err := json.Marshal(statusEvent{NodeID: n.ID, Status: n.Status}); err == nil {
 			ch <- string(payload)
 		}
 	}
-	s.mu.RUnlock()
-
-	s.clientsMu.Lock()
 	s.clients[ch] = struct{}{}
-	s.clientsMu.Unlock()
+	s.mu.Unlock()
 
 	defer func() {
-		s.clientsMu.Lock()
+		s.mu.Lock()
 		delete(s.clients, ch)
-		s.clientsMu.Unlock()
+		s.mu.Unlock()
 	}()
 
 	for {

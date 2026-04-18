@@ -91,6 +91,12 @@ func (eng *LocalEngine) Run(ctx context.Context, cfg config.PipelineConfig) (<-c
 
 	results := make(chan TaskResult, len(sorted))
 	emitter := eng.lineageEmitter()
+	exec := &executor{
+		registry:  eng.Registry,
+		dlq:       eng.DLQ,
+		retryCfg:  cfg.Retry,
+		batchSize: batchSize,
+	}
 
 	var wg sync.WaitGroup
 	for _, node := range sorted {
@@ -107,13 +113,6 @@ func (eng *LocalEngine) Run(ctx context.Context, cfg config.PipelineConfig) (<-c
 		wg.Add(1)
 		go func(n dag.Node, in <-chan Batch, out chan<- Batch) {
 			defer wg.Done()
-
-			exec := &executor{
-				registry:  eng.Registry,
-				dlq:       eng.DLQ,
-				retryCfg:  cfg.Retry,
-				batchSize: batchSize,
-			}
 
 			// Build the lineage event skeleton shared across START/COMPLETE/FAIL.
 			ns := cfg.Lineage.Namespace

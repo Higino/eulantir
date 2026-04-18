@@ -86,19 +86,19 @@ func (l *Loader) Load(name, sourcePath, entrypoint string) (Transform, error) {
 	}
 
 	// --- open plugin (or reuse already-open handle) ---
+	// Hold the lock for the full check-open-store sequence so two concurrent
+	// goroutines loading the same transform can't both call plugin.Open.
 	openPluginsMu.Lock()
 	p, alreadyOpen := openPlugins[hash]
-	openPluginsMu.Unlock()
-
 	if !alreadyOpen {
 		p, err = plugin.Open(pluginPath)
 		if err != nil {
+			openPluginsMu.Unlock()
 			return nil, fmt.Errorf("open plugin %q: %w", pluginPath, err)
 		}
-		openPluginsMu.Lock()
 		openPlugins[hash] = p
-		openPluginsMu.Unlock()
 	}
+	openPluginsMu.Unlock()
 
 	// --- resolve entrypoint symbol ---
 	sym, err := p.Lookup(entrypoint)

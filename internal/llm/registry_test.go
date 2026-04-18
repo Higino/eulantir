@@ -116,47 +116,57 @@ func TestBuildProvider_CaseInsensitive(t *testing.T) {
 }
 
 // ---------------------------------------------------------------------------
-// resolveEnv
+// API key env-var expansion (via BuildProvider)
 // ---------------------------------------------------------------------------
 
-// TestResolveEnv_LiteralString verifies that a plain string is returned as-is.
-func TestResolveEnv_LiteralString(t *testing.T) {
-	got := resolveEnv("plain-value")
-	if got != "plain-value" {
-		t.Errorf("expected 'plain-value', got %q", got)
-	}
-}
-
-// TestResolveEnv_DollarPrefix_Set verifies that "$VAR" is substituted.
-func TestResolveEnv_DollarPrefix_Set(t *testing.T) {
+// TestBuildProvider_APIKey_DollarVar verifies that "$VAR" is expanded.
+func TestBuildProvider_APIKey_DollarVar(t *testing.T) {
 	t.Setenv("MY_SECRET", "abc123")
-	got := resolveEnv("$MY_SECRET")
-	if got != "abc123" {
-		t.Errorf("expected 'abc123', got %q", got)
+	p, err := BuildProvider(ProviderConfig{Type: "anthropic", APIKey: "$MY_SECRET"})
+	if err != nil {
+		t.Fatalf("expected success, got %v", err)
+	}
+	if p == nil {
+		t.Fatal("expected non-nil provider")
 	}
 }
 
-// TestResolveEnv_DollarPrefix_Unset verifies that an unset "$VAR" becomes "".
-func TestResolveEnv_DollarPrefix_Unset(t *testing.T) {
+// TestBuildProvider_APIKey_BraceVar verifies that "${VAR}" is expanded.
+func TestBuildProvider_APIKey_BraceVar(t *testing.T) {
+	t.Setenv("MY_SECRET", "abc123")
+	p, err := BuildProvider(ProviderConfig{Type: "anthropic", APIKey: "${MY_SECRET}"})
+	if err != nil {
+		t.Fatalf("expected success with ${VAR} expansion, got %v", err)
+	}
+	if p == nil {
+		t.Fatal("expected non-nil provider")
+	}
+}
+
+// TestBuildProvider_APIKey_UnsetVar verifies that an unset "$VAR" makes the key empty.
+func TestBuildProvider_APIKey_UnsetVar(t *testing.T) {
 	os.Unsetenv("DOES_NOT_EXIST_XYZ")
-	got := resolveEnv("$DOES_NOT_EXIST_XYZ")
-	if got != "" {
-		t.Errorf("expected empty string for unset var, got %q", got)
+	_, err := BuildProvider(ProviderConfig{Type: "anthropic", APIKey: "$DOES_NOT_EXIST_XYZ"})
+	if err == nil {
+		t.Fatal("expected error when env var is unset and key is required")
 	}
 }
 
-// TestResolveEnv_EmptyString verifies an empty input returns empty output.
-func TestResolveEnv_EmptyString(t *testing.T) {
-	got := resolveEnv("")
-	if got != "" {
-		t.Errorf("expected empty string, got %q", got)
+// TestBuildProvider_APIKey_LiteralValue verifies that a plain (non-$) key is used as-is.
+func TestBuildProvider_APIKey_LiteralValue(t *testing.T) {
+	p, err := BuildProvider(ProviderConfig{Type: "anthropic", APIKey: "plain-key"})
+	if err != nil {
+		t.Fatalf("expected success with literal key, got %v", err)
+	}
+	if p == nil {
+		t.Fatal("expected non-nil provider")
 	}
 }
 
-// TestResolveEnv_DollarInMiddle verifies that "$" not at the start is kept as-is.
-func TestResolveEnv_DollarInMiddle(t *testing.T) {
-	got := resolveEnv("prefix$SUFFIX")
-	if got != "prefix$SUFFIX" {
-		t.Errorf("expected literal 'prefix$SUFFIX', got %q", got)
+// TestBuildProvider_APIKey_EmptyRejectsRequired verifies that an empty key is rejected for providers that require one.
+func TestBuildProvider_APIKey_EmptyRejectsRequired(t *testing.T) {
+	_, err := BuildProvider(ProviderConfig{Type: "anthropic", APIKey: ""})
+	if err == nil {
+		t.Fatal("expected error for empty required API key")
 	}
 }

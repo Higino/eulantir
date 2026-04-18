@@ -8,7 +8,9 @@ import (
 
 	// import built-in connectors so their init() functions register them
 	_ "github.com/higino/eulantir/internal/connectors/csv"
+	_ "github.com/higino/eulantir/internal/connectors/kafka"
 	_ "github.com/higino/eulantir/internal/connectors/postgres"
+	_ "github.com/higino/eulantir/internal/connectors/s3"
 
 	"github.com/spf13/cobra"
 )

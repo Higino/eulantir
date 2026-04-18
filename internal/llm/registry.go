@@ -8,16 +8,16 @@ import (
 
 // ProviderConfig is the llm: section of pipeline.yaml.
 type ProviderConfig struct {
-	Type    string `yaml:"provider"`  // ollama | openai | anthropic
+	Type    string `yaml:"provider"` // ollama | openai | anthropic
 	BaseURL string `yaml:"base_url"`
-	APIKey  string `yaml:"api_key"`   // supports $ENV_VAR substitution
+	APIKey  string `yaml:"api_key"` // supports $ENV_VAR and ${ENV_VAR} substitution
 	Model   string `yaml:"model"`
 }
 
 // BuildProvider constructs the right Provider from config.
-// API keys prefixed with "$" are resolved from environment variables.
+// API keys are expanded with os.ExpandEnv, supporting $VAR and ${VAR} forms.
 func BuildProvider(cfg ProviderConfig) (Provider, error) {
-	apiKey := resolveEnv(cfg.APIKey)
+	apiKey := os.ExpandEnv(cfg.APIKey)
 
 	switch strings.ToLower(cfg.Type) {
 	case "ollama", "":
@@ -35,12 +35,4 @@ func BuildProvider(cfg ProviderConfig) (Provider, error) {
 	default:
 		return nil, fmt.Errorf("unknown provider type %q — valid options: ollama, openai, anthropic", cfg.Type)
 	}
-}
-
-// resolveEnv substitutes "$ENV_VAR" values with their environment variable value.
-func resolveEnv(s string) string {
-	if strings.HasPrefix(s, "$") {
-		return os.Getenv(strings.TrimPrefix(s, "$"))
-	}
-	return s
 }

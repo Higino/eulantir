@@ -5,9 +5,9 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io"
 	"os"
 	"path/filepath"
+	"sync"
 	"time"
 
 	"github.com/higino/eulantir/internal/connector"
@@ -15,13 +15,13 @@ import (
 
 // dlqEntry is the JSON structure written for each failed record.
 type dlqEntry struct {
-	NodeID    string            `json:"node_id"`
-	Offset    int64             `json:"offset"`
-	Key       []byte            `json:"key,omitempty"`
-	Value     []byte            `json:"value"`
-	Headers   map[string]string `json:"headers,omitempty"`
-	Reason    string            `json:"reason"`
-	FailedAt  time.Time         `json:"failed_at"`
+	NodeID   string            `json:"node_id"`
+	Offset   int64             `json:"offset"`
+	Key      []byte            `json:"key,omitempty"`
+	Value    []byte            `json:"value"`
+	Headers  map[string]string `json:"headers,omitempty"`
+	Reason   string            `json:"reason"`
+	FailedAt time.Time         `json:"failed_at"`
 }
 
 // FileDLQ writes failed records to newline-delimited JSON files under a base
@@ -29,7 +29,8 @@ type dlqEntry struct {
 //
 // Layout: <baseDir>/<nodeID>/<YYYY-MM-DD>.jsonl
 type FileDLQ struct {
-	baseDir string
+	baseDir  string
+	mkdirred sync.Map // tracks dirs already created to avoid repeated syscalls
 }
 
 // NewFileDLQ creates a FileDLQ that writes under baseDir.
@@ -39,8 +40,11 @@ func NewFileDLQ(baseDir string) *FileDLQ {
 
 func (d *FileDLQ) Push(_ context.Context, nodeID string, r connector.Record, reason error) error {
 	dir := filepath.Join(d.baseDir, nodeID)
-	if err := os.MkdirAll(dir, 0o755); err != nil {
-		return fmt.Errorf("dlq: mkdir %s: %w", dir, err)
+	if _, ok := d.mkdirred.Load(dir); !ok {
+		if err := os.MkdirAll(dir, 0o755); err != nil {
+			return fmt.Errorf("dlq: mkdir %s: %w", dir, err)
+		}
+		d.mkdirred.Store(dir, struct{}{})
 	}
 
 	filename := filepath.Join(dir, time.Now().Format("2006-01-02")+".jsonl")
@@ -113,15 +117,8 @@ func (d *FileDLQ) Count(_ context.Context, nodeID string) (int64, error) {
 		if err != nil {
 			continue
 		}
-		r := bufio.NewReader(f)
-		for {
-			_, err := r.ReadString('\n')
-			if err == io.EOF {
-				break
-			}
-			if err != nil {
-				break
-			}
+		scanner := bufio.NewScanner(f)
+		for scanner.Scan() {
 			count++
 		}
 		f.Close()

@@ -34,6 +34,7 @@ type executor struct {
 type connectorRegistry interface {
 	BuildSource(typ string, cfg map[string]any) (connector.Source, error)
 	BuildSink(typ string, cfg map[string]any) (connector.Sink, error)
+	IsSink(typ string) bool
 }
 
 // run executes one task and closes outPipe when done.
@@ -246,10 +247,8 @@ func (e *executor) resolveConnectors(node dag.Node, pCfg config.PipelineConfig) 
 		return nil, nil, fmt.Errorf("connector %q not found", node.ConnectorRef)
 	}
 
-	switch found.Type {
-	case "postgres", "csv-sink", "kafka-sink", "s3-sink":
+	if e.registry.IsSink(found.Type) {
 		return nil, found, nil
-	default:
-		return found, nil, nil
 	}
+	return found, nil, nil
 }

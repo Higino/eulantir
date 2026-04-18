@@ -20,7 +20,7 @@ func Load(path string) (*PipelineConfig, error) {
 		return nil, fmt.Errorf("read %s: %w", path, err)
 	}
 
-	expanded := expandEnv(string(raw))
+	expanded := os.ExpandEnv(string(raw))
 
 	var cfg PipelineConfig
 	if err := yaml.Unmarshal([]byte(expanded), &cfg); err != nil {
@@ -47,7 +47,7 @@ func Load(path string) (*PipelineConfig, error) {
 // LoadBytes parses a pipeline config from a raw YAML byte slice.
 // Useful for validating LLM-generated YAML before writing to disk.
 func LoadBytes(raw []byte) (*PipelineConfig, error) {
-	expanded := expandEnv(string(raw))
+	expanded := os.ExpandEnv(string(raw))
 
 	var cfg PipelineConfig
 	if err := yaml.Unmarshal([]byte(expanded), &cfg); err != nil {
@@ -59,12 +59,6 @@ func LoadBytes(raw []byte) (*PipelineConfig, error) {
 	}
 
 	return &cfg, nil
-}
-
-// expandEnv replaces $VAR and ${VAR} patterns with their environment values.
-// Unknown variables are left as empty strings (os.ExpandEnv behaviour).
-func expandEnv(s string) string {
-	return os.ExpandEnv(s)
 }
 
 // validateConfig runs all validation rules on a loaded PipelineConfig.

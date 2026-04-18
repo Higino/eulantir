@@ -2,6 +2,7 @@ package visualize
 
 import (
 	"github.com/higino/eulantir/internal/config"
+	"github.com/higino/eulantir/internal/connector"
 	"github.com/higino/eulantir/internal/engine"
 )
 
@@ -35,11 +36,6 @@ type GraphData struct {
 	Edges        []GraphEdge `json:"edges"`
 }
 
-// sinkTypes mirrors the heuristic in engine/executor.go.
-var sinkTypes = map[string]bool{
-	"postgres": true, "csv-sink": true, "kafka-sink": true, "s3-sink": true,
-}
-
 // Build converts a PipelineConfig into a GraphData with all nodes in StatusPending.
 func Build(cfg *config.PipelineConfig) GraphData {
 	connTypes := make(map[string]string, len(cfg.Connectors))
@@ -55,7 +51,7 @@ func Build(cfg *config.PipelineConfig) GraphData {
 		label := t.ID
 		if t.Connector != "" {
 			ct := connTypes[t.Connector]
-			if sinkTypes[ct] {
+			if connector.Default.IsSink(ct) {
 				kind = KindSink
 			} else {
 				kind = KindSource

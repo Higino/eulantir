@@ -10,10 +10,6 @@ import (
 	"syscall"
 
 	"github.com/higino/eulantir/internal/config"
-	"github.com/higino/eulantir/internal/connector"
-	"github.com/higino/eulantir/internal/dlq"
-	"github.com/higino/eulantir/internal/engine"
-	"github.com/higino/eulantir/internal/lineage"
 	"github.com/higino/eulantir/internal/visualize"
 
 	_ "github.com/higino/eulantir/internal/connectors/csv"
@@ -61,22 +57,7 @@ Examples:
 
 		if run {
 			go func() {
-				var pipelineDLQ dlq.DLQ
-				if cfg.DLQ.Enabled {
-					dir := "./dlq"
-					if p, ok := cfg.DLQ.Config["path"].(string); ok && p != "" {
-						dir = p
-					}
-					pipelineDLQ = dlq.NewFileDLQ(dir)
-				}
-
-				eng := &engine.LocalEngine{
-					Registry: connector.Default,
-					DLQ:      pipelineDLQ,
-					Lineage:  lineage.New(cfg.Lineage),
-				}
-
-				results, err := eng.Run(ctx, *cfg)
+				results, err := buildEngine(*cfg).Run(ctx, *cfg)
 				if err != nil {
 					slog.Error("engine error", "err", err)
 					return

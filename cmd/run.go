@@ -8,10 +8,7 @@ import (
 	"time"
 
 	"github.com/higino/eulantir/internal/config"
-	"github.com/higino/eulantir/internal/connector"
-	"github.com/higino/eulantir/internal/dlq"
 	"github.com/higino/eulantir/internal/engine"
-	"github.com/higino/eulantir/internal/lineage"
 
 	// import built-in connectors so their init() functions register them
 	_ "github.com/higino/eulantir/internal/connectors/csv"
@@ -50,23 +47,7 @@ func runPipeline(ctx context.Context, pipelinePath string) error {
 	}
 	fmt.Fprintf(os.Stderr, "▶  Running pipeline %q (%d tasks)\n\n", cfg.Name, len(cfg.Tasks))
 
-	// set up DLQ if enabled
-	var pipelineDLQ dlq.DLQ
-	if cfg.DLQ.Enabled {
-		dir := "./dlq"
-		if p, ok := cfg.DLQ.Config["path"].(string); ok && p != "" {
-			dir = p
-		}
-		pipelineDLQ = dlq.NewFileDLQ(dir)
-	}
-
-	eng := &engine.LocalEngine{
-		Registry: connector.Default,
-		DLQ:      pipelineDLQ,
-		Lineage:  lineage.New(cfg.Lineage),
-	}
-
-	results, err := eng.Run(ctx, *cfg)
+	results, err := buildEngine(*cfg).Run(ctx, *cfg)
 	if err != nil {
 		return fmt.Errorf("engine error: %w", err)
 	}

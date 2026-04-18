@@ -62,7 +62,7 @@ func (d *DAG) TopologicalSort() ([]Node, error) {
 	}
 
 	// seed queue with nodes that have no dependencies
-	queue := []string{}
+	var queue []string
 	for id, deg := range inDegree {
 		if deg == 0 {
 			queue = append(queue, id)

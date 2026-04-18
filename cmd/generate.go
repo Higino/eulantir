@@ -151,7 +151,7 @@ func validatePipeline(pipelinePath string) error {
 	fmt.Fprintf(os.Stderr, "  ✔  DAG is acyclic\n\n")
 	fmt.Fprintf(os.Stderr, "Execution order:\n")
 	for i, node := range sorted {
-		label := buildNodeLabel(node.ConnectorRef, node.TransformRef, cfg)
+		label := buildNodeLabel(node.ConnectorRef, node.TransformRef)
 		fmt.Fprintf(os.Stderr, "  %d. %-10s [%s]\n", i+1, node.ID, label)
 	}
 	fmt.Fprintln(os.Stderr)

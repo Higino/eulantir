@@ -80,6 +80,7 @@ func (r *mockRegistry) BuildSink(_ string, _ map[string]any) (connector.Sink, er
 	}
 	return r.snk, nil
 }
+func (r *mockRegistry) IsSink(_ string) bool { return r.snk != nil }
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -312,18 +313,6 @@ func TestLocalEngine_CSVSourceToCSVSink(t *testing.T) {
 	}
 	outputPath := t.TempDir() + "/output.csv"
 
-	reg := connector.NewRegistry()
-	// register CSV source and sink from the Default registry
-	for _, info := range connector.Default.List() {
-		localInfo := info
-		reg.RegisterSource(localInfo, func(ctx context.Context, cfg map[string]any) (connector.Source, error) {
-			return connector.Default.BuildSource(localInfo.Type, cfg)
-		})
-		reg.RegisterSink(localInfo, func(ctx context.Context, cfg map[string]any) (connector.Sink, error) {
-			return connector.Default.BuildSink(localInfo.Type, cfg)
-		})
-	}
-
 	cfg := config.PipelineConfig{
 		Version: "1",
 		Name:    "csv-to-csv",
@@ -337,7 +326,7 @@ func TestLocalEngine_CSVSourceToCSVSink(t *testing.T) {
 		},
 	}
 
-	eng := &LocalEngine{Registry: reg}
+	eng := &LocalEngine{Registry: connector.Default}
 	results, err := eng.Run(context.Background(), cfg)
 	if err != nil {
 		t.Fatalf("Run: %v", err)

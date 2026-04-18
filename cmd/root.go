@@ -40,4 +40,5 @@ func init() {
 	rootCmd.AddCommand(connectorsCmd)
 	rootCmd.AddCommand(visualizeCmd)
 	rootCmd.AddCommand(serveCmd)
+	rootCmd.AddCommand(catalogCmd)
 }

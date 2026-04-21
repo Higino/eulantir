@@ -1,0 +1,16 @@
+services:
+  catalog:
+    build: .
+    # Run from /app so connector paths like ./sample/complex/data/... resolve correctly.
+    working_dir: /app
+    command: catalog serve sample/complex/pipeline.yaml --port 8080
+    ports:
+      - "8080:8080"
+    volumes:
+      # Mount the project root read-only — only data files are needed at runtime.
+      - .:/app:ro
+    environment:
+      # Add connector credentials here if your pipeline needs them, e.g.:
+      # POSTGRES_DSN: postgres://user:pass@db:5432/mydb
+      # AWS_REGION: us-east-1
+    restart: unless-stopped

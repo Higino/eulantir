@@ -4,8 +4,12 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"net/http"
 	"os"
+	"os/signal"
 	"strings"
+	"syscall"
+	"time"
 
 	"github.com/spf13/cobra"
 
@@ -252,6 +256,62 @@ func min(a, b int) int {
 	return b
 }
 
+// ── catalog serve ──────────────────────────────────────────────────────────
+
+var catalogServeCmd = &cobra.Command{
+	Use:          "serve <pipeline.yaml>",
+	Short:        "Profile source connectors and serve an interactive catalog dashboard",
+	Args:         cobra.ExactArgs(1),
+	SilenceUsage: true,
+	RunE: func(cmd *cobra.Command, args []string) error {
+		port, _ := cmd.Flags().GetInt("port")
+		sampleSize, _ := cmd.Flags().GetInt("sample")
+
+		cfg, err := config.Load(args[0])
+		if err != nil {
+			return err
+		}
+
+		ctx := context.Background()
+		fmt.Fprintln(os.Stderr, "Profiling sources…")
+		profiles, err := profileSources(ctx, cfg, sampleSize)
+		if err != nil {
+			return err
+		}
+
+		profiledAt := time.Now().UTC().Format("2006-01-02 15:04 UTC")
+
+		handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			html, err := catalog.RenderDashboard(cfg.Name, profiles, profiledAt)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+			w.Header().Set("Content-Type", "text/html; charset=utf-8")
+			_, _ = w.Write(html)
+		})
+
+		addr := fmt.Sprintf(":%d", port)
+		httpSrv := &http.Server{Addr: addr, Handler: handler}
+
+		sigCtx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+		defer cancel()
+
+		go func() {
+			if err := httpSrv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+				fmt.Fprintf(os.Stderr, "server error: %v\n", err)
+			}
+		}()
+
+		fmt.Fprintf(os.Stderr, "▶  Catalog dashboard at http://localhost:%d\n", port)
+		fmt.Fprintln(os.Stderr, "   Press Ctrl+C to stop")
+
+		<-sigCtx.Done()
+		fmt.Fprintln(os.Stderr, "\n⏹  Shutting down")
+		return httpSrv.Shutdown(context.Background())
+	},
+}
+
 func init() {
 	// profile flags
 	catalogProfileCmd.Flags().Int("sample", 1000, "maximum number of records to sample per source")
@@ -265,6 +325,11 @@ func init() {
 	catalogEnrichCmd.Flags().String("api-key", "", "LLM API key (or set $OPENAI_API_KEY / $ANTHROPIC_API_KEY)")
 	catalogEnrichCmd.Flags().String("base-url", "", "override LLM endpoint URL")
 
+	// serve flags
+	catalogServeCmd.Flags().IntP("port", "p", 8080, "port to listen on")
+	catalogServeCmd.Flags().Int("sample", 1000, "maximum number of records to sample per source")
+
 	catalogCmd.AddCommand(catalogProfileCmd)
 	catalogCmd.AddCommand(catalogEnrichCmd)
+	catalogCmd.AddCommand(catalogServeCmd)
 }
